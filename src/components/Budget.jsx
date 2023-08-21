@@ -2,6 +2,7 @@ import axios from 'axios';
 import {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 
+
 const Budget = () => {
 
     const api = 'http://localhost:8080/api/v1/budgets'
@@ -25,21 +26,25 @@ const Budget = () => {
            
     
        
-    <tbody className='budget-card'>
+   
           {budgets.map(budget => 
-                                      <tr key={budget.id}>
-
-                                      <td>{budget.budgetName}</td>
-
-                                      <td>{budget.budgetAmount}</td>
+                                      
 
                                       
                                       
                                       
-                                      </tr> 
+                                      <div class="card-body" key={budget.id}>
+                                        <h5 class="card-title">{budget.budgetName}</h5>
+                                        <p class="card-text">{budget.budgetAmount}</p>
+                                      </div>
+                                
+                                      
+                                      
+                                      
+                                     
                          )
           }
-    </tbody>
+
 
         </div>
 

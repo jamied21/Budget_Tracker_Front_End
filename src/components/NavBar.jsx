@@ -8,7 +8,7 @@ return (
 
 <Link to='/' class="active"> Home </Link>
 <Link to='/Budgets'> Budgets </Link>
-<Link to='/Expenses'> Expenses</Link>
+<Link to='/expense'> Expenses</Link>
 
 
 </div>
