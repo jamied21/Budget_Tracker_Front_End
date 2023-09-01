@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../styles/BudgetCard.css";
 
 const Budget = () => {
   const api = "http://localhost:8080/api/v1/budgets";
@@ -27,12 +28,14 @@ const Budget = () => {
       <button class="button" onClick={AddBudgetLink} type="button">
         Add Budget
       </button>
-      {budgets.map((budget) => (
-        <div class="card-body" key={budget.id}>
-          <h5 class="card-title">{budget.budgetName}</h5>
-          <p class="card-text">£{budget.budgetAmount}</p>
-        </div>
-      ))}
+      <div className="budget-container">
+        {budgets.map((budget) => (
+          <div class="budget-card-body" key={budget.id}>
+            <h5 class="card-title">{budget.budgetName}</h5>
+            <p class="card-text">£{budget.budgetAmount}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

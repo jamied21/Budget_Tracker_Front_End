@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const SelectList = ({ api, onSelect, multiple }) => {
+const SelectList = ({ apiURL, onSelect, multiple }) => {
   const [items, setItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
 
   useEffect(() => {
     axios
-      .get(api)
+      .get(apiURL)
       .then((response) => {
         setItems(response.data);
       })
       .catch((error) => {
         console.error("Error fetching items:", error);
       });
-  }, [api]);
+  }, [apiURL]);
 
   const handleItemClick = (item) => {
     if (multiple) {

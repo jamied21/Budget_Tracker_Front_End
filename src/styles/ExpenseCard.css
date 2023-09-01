@@ -1,0 +1,22 @@
+.expense-container {
+
+   display: grid;
+   width: 100%;
+   margin: 0 auto;
+
+}
+
+.expense-card-body{
+
+    /* Add shadows to create the "card" effect */
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  padding: 5px 16px;
+  width: 100%; /* Take up full width of the container */
+  height: 200px; /* Set a fixed height to make the cards square */
+  margin-bottom: 20px; /* Adjust margin between ExpenseCards */
+  color: black;
+  background-color: grey; /* Modify this color as needed */
+  border-radius: 25px;
+}
+

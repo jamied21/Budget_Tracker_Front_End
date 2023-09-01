@@ -1,0 +1,11 @@
+.home-container{
+/* displays the budget and expense containers side by side */
+display: grid;
+grid-template-columns: 1fr 1fr;
+column-gap: 25px;
+padding-right: 30px;
+padding-left: 30px;
+margin: 0 auto;
+}
+
+

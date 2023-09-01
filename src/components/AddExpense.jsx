@@ -1,20 +1,17 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SelectList from "./SelectList";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
 
 const AddExpense = () => {
   const api = "http://localhost:8080/api/v1/expenses";
   const apiBudget = "http://localhost:8080/api/v1/budgets";
 
-  const [category, setCategory] = useState([]);
   const [budgets, setBudgets] = useState([]);
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
+  const [selectedBudgetId, setSelectedBudgetId] = useState(null); // Track selected budget ID
 
   const loadBudgets = () => {
     axios
@@ -29,9 +26,12 @@ const AddExpense = () => {
 
   const createExpense = (event) => {
     event.preventDefault();
-
     axios
-      .post(api, { expenseName: name, amount: amount, budget: category })
+      .post(api, {
+        expenseName: name,
+        amount: amount,
+        budget: { id: selectedBudgetId }, // Associate selected budget
+      })
       .then((response) => {
         navigate("/expense");
       })
@@ -45,7 +45,10 @@ const AddExpense = () => {
       {/* Adding dropdown for budget selection */}
       <form onSubmit={createExpense}>
         <div>
-          <select defaultValue="default" onSelect={setCategory}>
+          <select
+            defaultValue="default"
+            onChange={(event) => setSelectedBudgetId(event.target.value)}
+          >
             <option value="default">Choose a Budget</option>
             {budgets.map((budget) => (
               <option key={budget.id} value={budget.id}>
@@ -56,22 +59,21 @@ const AddExpense = () => {
         </div>
 
         {/* Adding form to enter expense name and amount */}
-
-        <div class="form-group">
-          <label for="formGroupExampleInput">Name</label>
+        <div className="form-group">
+          <label htmlFor="formGroupExampleInput">Name</label>
           <input
             type="text"
-            class="form-control"
+            className="form-control"
             id="formGroupExampleInput"
             placeholder="Enter name"
             value={name}
             onChange={(event) => setName(event.target.value)}
             required
           />
-          <label for="formGroupExampleInput">Amount</label>
+          <label htmlFor="formGroupExampleInput">Amount</label>
           <input
             type="text"
-            class="form-control"
+            className="form-control"
             id="formGroupExampleInput"
             placeholder="Enter amount"
             value={amount}
@@ -80,7 +82,7 @@ const AddExpense = () => {
           />
         </div>
 
-        <button type="submit" class="btn btn-primary">
+        <button type="submit" className="btn btn-primary">
           Add Expense
         </button>
       </form>
