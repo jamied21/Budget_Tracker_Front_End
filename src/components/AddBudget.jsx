@@ -7,9 +7,21 @@ const AddBudget = () => {
   const [amount, setAmount] = useState("");
   const navigate = useNavigate();
   const api = "http://localhost:8080/api/v1/budgets";
+  const [negativeAmountError, setNegativeAmountError] = useState(false); // Track negative amount error
+  const [nameError, setNameError] = useState(false); // Track name error
 
   const createBudget = (event) => {
     event.preventDefault();
+    if (parseFloat(amount) < 0) {
+      setNegativeAmountError(true);
+      return;
+    }
+
+    const namePattern = /^[A-Za-z]+$/;
+    if (!namePattern.test(name)) {
+      setNameError(true);
+      return; // Don't proceed with creating expense
+    }
 
     axios
       .post(api, { budgetName: name, budgetAmount: amount })
@@ -43,6 +55,13 @@ const AddBudget = () => {
             required
           />
         </div>
+        {negativeAmountError && (
+          <div style={{ color: "red" }}>Amount cannot be negative.</div>
+        )}
+
+        {nameError && (
+          <div style={{ color: "red" }}>Budget name cannot have a number.</div>
+        )}
 
         <button type="submit" class="btn btn-primary">
           Add Budget
