@@ -31,12 +31,12 @@ const Expense = () => {
         {expenses.map((expense) => {
           return (
             <div class="expense-card-body" key={expense.id}>
-              <h5 class="card-title">
+              <h5 class="expense-card-title">
                 Budget Category: {expense.budget.budgetName}
               </h5>
 
-              <h5 class="card-title">Expense: {expense.expenseName}</h5>
-              <p class="card-text">£{expense.amount}</p>
+              <h5 class="expense-card-title">Expense: {expense.expenseName}</h5>
+              <p class="expense-card-text">£{expense.amount}</p>
             </div>
           );
         })}

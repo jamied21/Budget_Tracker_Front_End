@@ -12,6 +12,10 @@ const AddExpense = () => {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [selectedBudgetId, setSelectedBudgetId] = useState(null); // Track selected budget ID
+  const [remainingBudget, setRemainingBudget] = useState(null);
+  const [overBudgetWarning, setOverBudgetWarning] = useState(false);
+  const [negativeAmountError, setNegativeAmountError] = useState(false); // Track negative amount error
+  const [nameError, setNameError] = useState(false); // Track name error
 
   const loadBudgets = () => {
     axios
@@ -24,18 +28,65 @@ const AddExpense = () => {
     loadBudgets();
   }, []);
 
-  const createExpense = (event) => {
+  useEffect(() => {
+    // Calculate remaining budget and check for over budget
+    if (selectedBudgetId) {
+      const selectedBudget = budgets.find(
+        (budget) => budget.id === parseInt(selectedBudgetId)
+      );
+      if (selectedBudget) {
+        const newRemainingBudget = selectedBudget.budgetAmount - amount;
+        setRemainingBudget(newRemainingBudget);
+
+        if (newRemainingBudget < 0) {
+          setOverBudgetWarning(true);
+        } else {
+          setOverBudgetWarning(false);
+        }
+      }
+    }
+  }, [selectedBudgetId, amount, budgets]);
+
+  const createExpense = async (event) => {
     event.preventDefault();
-    axios
-      .post(api, {
-        expenseName: name,
-        amount: amount,
-        budget: { id: selectedBudgetId }, // Associate selected budget
-      })
-      .then((response) => {
+
+    if (parseFloat(amount) < 0) {
+      setNegativeAmountError(true);
+      return; // Don't proceed with creating expense
+    }
+
+    const namePattern = /^[A-Za-z]+$/;
+    if (!namePattern.test(name)) {
+      setNameError(true);
+      return; // Don't proceed with creating expense
+    }
+
+    const selectedBudget = budgets.find(
+      (budget) => budget.id === parseInt(selectedBudgetId)
+    );
+    if (selectedBudget) {
+      const updatedBudgetAmount = selectedBudget.budgetAmount - amount;
+      const updatedBudget = {
+        ...selectedBudget,
+        budgetAmount: updatedBudgetAmount,
+      };
+
+      try {
+        // First, create the expense
+        const expenseResponse = await axios.post(api, {
+          expenseName: name,
+          amount: amount,
+          budget: { id: selectedBudgetId },
+        });
+
+        // Then, update the budget
+        await axios.put(`${apiBudget}/${selectedBudgetId}`, updatedBudget);
+
         navigate("/expense");
-      })
-      .catch((error) => console.log(error));
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   return (
@@ -51,7 +102,7 @@ const AddExpense = () => {
           >
             <option value="default">Choose a Budget</option>
             {budgets.map((budget) => (
-              <option key={budget.id} value={budget.id}>
+              <option key={budget.id} value={budget.id} required>
                 {budget.budgetName}
               </option>
             ))}
@@ -72,15 +123,39 @@ const AddExpense = () => {
           />
           <label htmlFor="formGroupExampleInput">Amount</label>
           <input
-            type="text"
+            type="number" // Change input type to "number" to enforce numeric input
             className="form-control"
             id="formGroupExampleInput"
             placeholder="Enter amount"
             value={amount}
-            onChange={(event) => setAmount(event.target.value)}
+            onChange={(event) => {
+              setAmount(event.target.value);
+              setNegativeAmountError(false); // Clear the negative amount error
+            }}
             required
           />
         </div>
+
+        {negativeAmountError && (
+          <div style={{ color: "red" }}>Amount cannot be negative.</div>
+        )}
+
+        {nameError && (
+          <div style={{ color: "red" }}>Expense name cannot have a number.</div>
+        )}
+
+        {remainingBudget !== null && (
+          <div>
+            <p>
+              Remaining Budget: £{remainingBudget.toFixed(2)}
+              {overBudgetWarning && (
+                <span style={{ color: "red" }}>
+                  &nbsp;(Warning: Over budget)
+                </span>
+              )}
+            </p>
+          </div>
+        )}
 
         <button type="submit" className="btn btn-primary">
           Add Expense

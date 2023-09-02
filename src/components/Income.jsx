@@ -29,6 +29,7 @@ const Income = () => {
       {incomes.map((income) => (
         <div class="card-body" key={income.id}>
           <h5 class="card-title">{income.incomeMonth}</h5>
+          <p class="card-text">Year: {income.incomeYear}</p>
           <p class="card-text">£{income.salary}</p>
         </div>
       ))}

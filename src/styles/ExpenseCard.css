@@ -2,8 +2,10 @@
 
    display: grid;
    width: 100%;
+   height: 500px;
    margin: 0 auto;
-
+background-color: indigo;
+overflow-y: scroll;
 }
 
 .expense-card-body{
@@ -16,7 +18,17 @@
   height: 200px; /* Set a fixed height to make the cards square */
   margin-bottom: 20px; /* Adjust margin between ExpenseCards */
   color: black;
-  background-color: grey; /* Modify this color as needed */
+  
+  background-color: midnightblue; /* Modify this color as needed */
   border-radius: 25px;
 }
 
+.expense-card-title{
+color:azure;
+
+}
+
+.expense-card-text{
+    color:azure;
+
+}
