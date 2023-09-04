@@ -61,31 +61,17 @@ const AddExpense = () => {
       return; // Don't proceed with creating expense
     }
 
-    const selectedBudget = budgets.find(
-      (budget) => budget.id === parseInt(selectedBudgetId)
-    );
-    if (selectedBudget) {
-      const updatedBudgetAmount = selectedBudget.budgetAmount - amount;
-      const updatedBudget = {
-        ...selectedBudget,
-        budgetAmount: updatedBudgetAmount,
-      };
+    try {
+      // Create the expense without updating the budget
+      await axios.post(api, {
+        expenseName: name,
+        amount: amount,
+        budget: { id: selectedBudgetId },
+      });
 
-      try {
-        // First, create the expense
-        const expenseResponse = await axios.post(api, {
-          expenseName: name,
-          amount: amount,
-          budget: { id: selectedBudgetId },
-        });
-
-        // Then, update the budget
-        await axios.put(`${apiBudget}/${selectedBudgetId}`, updatedBudget);
-
-        navigate("/expense");
-      } catch (error) {
-        console.log(error);
-      }
+      navigate("/expense");
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -102,7 +88,7 @@ const AddExpense = () => {
           >
             <option value="default">Choose a Budget</option>
             {budgets.map((budget) => (
-              <option key={budget.id} value={budget.id} required>
+              <option key={budget.id} value={budget.id}>
                 {budget.budgetName}
               </option>
             ))}
@@ -136,6 +122,7 @@ const AddExpense = () => {
           />
         </div>
 
+        {/* Warning messages */}
         {negativeAmountError && (
           <div style={{ color: "red" }}>Amount cannot be negative.</div>
         )}
@@ -157,6 +144,7 @@ const AddExpense = () => {
           </div>
         )}
 
+        {/* Button */}
         <button type="submit" className="btn btn-primary">
           Add Expense
         </button>
