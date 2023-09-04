@@ -10,7 +10,7 @@ const Income = () => {
     axios
       .get(api)
       .then((response) => setIncomes(response.data))
-      .catch((error) => console.log("Unable to load Academies"));
+      .catch((error) => console.log("Unable to load Incomes"));
   };
 
   useEffect(() => {

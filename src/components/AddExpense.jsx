@@ -55,7 +55,7 @@ const AddExpense = () => {
       return; // Don't proceed with creating expense
     }
 
-    const namePattern = /^[A-Za-z]+$/;
+    const namePattern = /^[A-Za-z\s]+$/;
     if (!namePattern.test(name)) {
       setNameError(true);
       return; // Don't proceed with creating expense
