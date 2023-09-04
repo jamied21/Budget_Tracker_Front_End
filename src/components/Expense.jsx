@@ -11,7 +11,7 @@ const Expense = () => {
     axios
       .get(api)
       .then((response) => setExpenses(response.data))
-      .catch((error) => console.log("Unable to load Academies"));
+      .catch((error) => console.log("Unable to load expenses"));
   };
 
   useEffect(() => {

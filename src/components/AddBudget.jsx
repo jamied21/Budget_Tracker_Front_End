@@ -6,25 +6,43 @@ const AddBudget = () => {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const navigate = useNavigate();
+  const [incomes, setIncomes] = useState([]);
+  const [selectedIncomeId, setSelectedIncomeId] = useState(null); // Track selected Income ID
   const api = "http://localhost:8080/api/v1/budgets";
+  const apiIncome = "http://localhost:8080/api/v1/incomes";
   const [negativeAmountError, setNegativeAmountError] = useState(false); // Track negative amount error
   const [nameError, setNameError] = useState(false); // Track name error
 
-  const createBudget = (event) => {
+  const loadIncomes = () => {
+    axios
+      .get(apiIncome)
+      .then((response) => setIncomes(response.data))
+      .catch((error) => console.log("Unable to load Incomes"));
+  };
+
+  useEffect(() => {
+    loadIncomes();
+  }, []);
+
+  const createBudget = async (event) => {
     event.preventDefault();
     if (parseFloat(amount) < 0) {
       setNegativeAmountError(true);
       return;
     }
 
-    const namePattern = /^[A-Za-z]+$/;
+    const namePattern = /^[A-Za-z\s]+$/;
     if (!namePattern.test(name)) {
       setNameError(true);
       return; // Don't proceed with creating expense
     }
 
-    axios
-      .post(api, { budgetName: name, budgetAmount: amount })
+    await axios
+      .post(api, {
+        budgetName: name,
+        budgetAmount: amount,
+        income: { id: selectedIncomeId },
+      })
       .then((response) => {
         navigate("/budget");
       })
@@ -33,6 +51,22 @@ const AddBudget = () => {
   return (
     <div>
       <form onSubmit={createBudget}>
+        {/* Adding dropdown for month selection */}
+
+        <div>
+          <select
+            defaultValue="default"
+            onChange={(event) => setSelectedIncomeId(event.target.value)}
+          >
+            <option value="default">Choose a Month</option>
+            {incomes.map((income) => (
+              <option key={income.id} value={income.id}>
+                {income.incomeMonth}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div class="form-group">
           <label for="formGroupExampleInput">Name</label>
           <input
