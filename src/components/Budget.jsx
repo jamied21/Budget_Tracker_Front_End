@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/BudgetCard.css";
+import ProgressBar from "./ProgressBar";
 
 const Budget = () => {
   const api = "http://localhost:8080/api/v1/budgets";
@@ -59,6 +60,12 @@ const Budget = () => {
     navigate("/budget/add");
   };
 
+  //Method used for the progress bar
+  const calculateExpensePercentage = (budget) => {
+    const totalExpenses = budgetsWithTotalExpenses[budget.id] || 0;
+    const budgetAmount = budget.budgetAmount;
+    return (totalExpenses / budgetAmount) * 100;
+  };
   return (
     <div>
       <button className="button" onClick={AddBudgetLink} type="button">
@@ -67,10 +74,11 @@ const Budget = () => {
       <div className="budget-container">
         {data.budgets.map((budget) => (
           <div className="budget-card-body" key={budget.id}>
+            <ProgressBar percentage={calculateExpensePercentage(budget)} />
+            <p>Total Spent: £{budgetsWithTotalExpenses[budget.id] || 0}</p>
             <h5 className="card-title">{budget.budgetName}</h5>
             <p className="card-text">£{budget.budgetAmount}</p>
 
-            <p>Total Spent: £{budgetsWithTotalExpenses[budget.id] || 0}</p>
             {/* Displays list of each expense for the relevant budget
              */}
 

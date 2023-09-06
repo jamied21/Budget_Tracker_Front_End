@@ -1,10 +1,12 @@
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/ExpenseCard.css";
+
 const Expense = () => {
   const api = "http://localhost:8080/api/v1/expenses";
   const [expenses, setExpenses] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState("All"); // Default to "All" to show all expenses initially
   const navigate = useNavigate();
 
   const loadExpenses = () => {
@@ -22,21 +24,55 @@ const Expense = () => {
     navigate("/expense/add");
   };
 
+  // Helper function to get unique incomeMonths from expenses
+  const getUniqueMonths = () => {
+    const months = expenses.map((expense) => expense.budget.income.incomeMonth);
+    return ["All", ...new Set(months)];
+  };
+
+  const uniqueMonths = getUniqueMonths();
+
+  // Handle dropdown change
+  const handleMonthChange = (event) => {
+    setSelectedMonth(event.target.value);
+  };
+
+  // Filter expenses based on the selected month
+  const filteredExpenses =
+    selectedMonth === "All"
+      ? expenses
+      : expenses.filter(
+          (expense) => expense.budget.income.incomeMonth === selectedMonth
+        );
+
   return (
     <div>
       <div className="expense-container">
-        <button class="button" onClick={AddExpenseLink} type="button">
+        <label htmlFor="monthDropdown">Filter by Month:</label>
+        <select
+          id="monthDropdown"
+          onChange={handleMonthChange}
+          value={selectedMonth}
+        >
+          {uniqueMonths.map((month) => (
+            <option key={month} value={month}>
+              {month}
+            </option>
+          ))}
+        </select>
+        <button className="button" onClick={AddExpenseLink} type="button">
           Add Expense
         </button>
-        {expenses.map((expense) => {
+        {filteredExpenses.map((expense) => {
           return (
-            <div class="expense-card-body" key={expense.id}>
-              <h5 class="expense-card-title">
+            <div className="expense-card-body" key={expense.id}>
+              <h5 className="expense-card-title">
                 Budget Category: {expense.budget.budgetName}
               </h5>
-
-              <h5 class="expense-card-title">Expense: {expense.expenseName}</h5>
-              <p class="expense-card-text">£{expense.amount}</p>
+              <h5 className="expense-card-title">
+                Expense: {expense.expenseName}
+              </h5>
+              <p className="expense-card-text">£{expense.amount}</p>
             </div>
           );
         })}
