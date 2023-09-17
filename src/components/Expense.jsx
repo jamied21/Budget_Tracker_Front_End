@@ -6,7 +6,7 @@ import "../styles/ExpenseCard.css";
 const Expense = () => {
   const api = "http://localhost:8080/api/v1/expenses";
   const [expenses, setExpenses] = useState([]);
-  const [selectedMonth, setSelectedMonth] = useState("All"); // Default to "All" to show all expenses initially
+  const [selectedMonth, setSelectedMonth] = useState("Select Month"); // Default to "Select Month" to show all expenses initially
   const navigate = useNavigate();
 
   const loadExpenses = () => {
@@ -27,7 +27,7 @@ const Expense = () => {
   // Helper function to get unique incomeMonths from expenses
   const getUniqueMonths = () => {
     const months = expenses.map((expense) => expense.budget.income.incomeMonth);
-    return ["All", ...new Set(months)];
+    return ["Select Month", ...new Set(months)];
   };
 
   const uniqueMonths = getUniqueMonths();
@@ -39,7 +39,7 @@ const Expense = () => {
 
   // Filter expenses based on the selected month
   const filteredExpenses =
-    selectedMonth === "All"
+    selectedMonth === "Select Month"
       ? expenses
       : expenses.filter(
           (expense) => expense.budget.income.incomeMonth === selectedMonth
@@ -47,19 +47,18 @@ const Expense = () => {
 
   return (
     <div>
+      <select
+        id="monthDropdown"
+        onChange={handleMonthChange}
+        value={selectedMonth}
+      >
+        {uniqueMonths.map((month) => (
+          <option key={month} value={month}>
+            {month}
+          </option>
+        ))}
+      </select>
       <div className="expense-container">
-        <label htmlFor="monthDropdown">Filter by Month:</label>
-        <select
-          id="monthDropdown"
-          onChange={handleMonthChange}
-          value={selectedMonth}
-        >
-          {uniqueMonths.map((month) => (
-            <option key={month} value={month}>
-              {month}
-            </option>
-          ))}
-        </select>
         <button className="button" onClick={AddExpenseLink} type="button">
           Add Expense
         </button>

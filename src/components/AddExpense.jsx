@@ -18,6 +18,8 @@ const AddExpense = () => {
   const [negativeAmountError, setNegativeAmountError] = useState(false); // Track negative amount error
   const [nameError, setNameError] = useState(false); // Track name error
 
+  const [selectedMonth, setSelectedMonth] = useState("Select Month"); // Default to "All" to show all budgets initially
+
   const loadBudgets = () => {
     axios
       .get(apiBudget)
@@ -28,6 +30,24 @@ const AddExpense = () => {
   useEffect(() => {
     loadBudgets();
   }, []);
+  //Filter for income month
+  const getUniqueMonths = () => {
+    const months = budgets.map((budget) => budget.income.incomeMonth);
+    return ["Select Month", ...new Set(months)];
+  };
+
+  const uniqueMonths = getUniqueMonths();
+
+  // Handle dropdown change
+  const handleMonthChange = (event) => {
+    setSelectedMonth(event.target.value);
+  };
+
+  // Filter budgets based on the selected month
+  const filteredBudgets =
+    selectedMonth === "Select Month"
+      ? budgets
+      : budgets.filter((budget) => budget.income.incomeMonth === selectedMonth);
 
   useEffect(() => {
     // Calculate remaining budget and check for over budget
@@ -79,6 +99,19 @@ const AddExpense = () => {
   return (
     <div>
       <h1>Please enter expense details</h1>
+      {/* Filter for month */}
+
+      <select
+        id="monthDropdown"
+        onChange={handleMonthChange}
+        value={selectedMonth}
+      >
+        {uniqueMonths.map((month) => (
+          <option key={month} value={month}>
+            {month}
+          </option>
+        ))}
+      </select>
 
       {/* Adding dropdown for budget selection */}
       <form onSubmit={createExpense}>
@@ -88,7 +121,7 @@ const AddExpense = () => {
             onChange={(event) => setSelectedBudgetId(event.target.value)}
           >
             <option value="default">Choose a Budget</option>
-            {budgets.map((budget) => (
+            {filteredBudgets.map((budget) => (
               <option key={budget.id} value={budget.id}>
                 {budget.budgetName}
               </option>
