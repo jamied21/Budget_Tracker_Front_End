@@ -5,7 +5,6 @@ import "../styles/incomeProgressBar.css";
 const IncomeProgressBar = ({ percentage }) => {
   let incomeProgressBarStyle, incomeProgressBarClass;
 
-  const api = "http://localhost:8080/api/v1/budgets";
   const apiExpense = "http://localhost:8080/api/v1/expenses";
   const [expenses, setExpenses] = useState([]);
 
