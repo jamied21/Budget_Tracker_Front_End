@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import DeleteIncome from "./DeleteIncome";
 
 const Income = () => {
   const api = "http://localhost:8080/api/v1/incomes";
@@ -32,6 +33,7 @@ const Income = () => {
           <h5 class="card-title">{income.incomeMonth}</h5>
           <p class="card-text">Year: {income.incomeYear}</p>
           <p class="card-text">£{income.salary}</p>
+          <DeleteIncome incomeId={income.id} setIncomes={setIncomes} />
         </div>
       ))}
     </div>

@@ -1,55 +1,71 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import "../styles/incomeProgressBar.css";
+import "../styles/IncomeProgressBar.css";
+import ProgressBar from "./ProgressBar";
 
-const IncomeProgressBar = ({ percentage }) => {
-  let incomeProgressBarStyle, incomeProgressBarClass;
-
+const IncomeProgressBar = () => {
   const apiExpense = "http://localhost:8080/api/v1/expenses";
   const [expenses, setExpenses] = useState([]);
-
-  // Need to obtain expense and budget data
-
-  const loadExpenses = () => {
-    axios
-      .get(apiExpense)
-      .then((response) => setExpenses(response.data))
-      .catch((error) => console.log("Unable to load Incomes"));
-  };
+  const [incomeMonths, setIncomeMonths] = useState([]);
 
   useEffect(() => {
-    loadExpenses();
+    axios
+      .get(apiExpense)
+      .then((response) => {
+        setExpenses(response.data);
+
+        // Get unique income months from expenses
+        const uniqueMonths = [
+          ...new Set(
+            response.data.map((expense) => expense.budget.income.incomeMonth)
+          ),
+        ];
+        setIncomeMonths(uniqueMonths);
+      })
+      .catch((error) => console.log("Unable to load Expenses"));
   }, []);
 
-  //Method for calculating the percentage = amount spent/income total
-  //Where amount spent is sum of expenses for each income month
+  // Calculate percentage for a given income month
+  const calculatePercentage = (incomeMonth) => {
+    const expensesForMonth = expenses.filter(
+      (expense) => expense.budget.income.incomeMonth === incomeMonth
+    );
+    const totalExpenses = expensesForMonth.reduce(
+      (acc, expense) => acc + expense.amount,
+      0
+    );
+    const salaryForMonth = expensesForMonth[0]?.budget.income.salary || 0; // Assuming salary is the same for the month
 
-  //Conditionals for prpgress bar
-  if (percentage === 100) {
-    incomeProgressBarClass = "equal-income";
+    // Calculate the percentage (make sure it doesn't exceed 100%)
+    const percentage = (totalExpenses / salaryForMonth) * 100;
 
-    incomeProgressBarStyle = {
-      width: `100%`,
-    };
-  } else if (percentage > 100) {
-    incomeProgressBarClass = "over-income";
+    return percentage;
+  };
 
-    incomeProgressBarStyle = {
-      width: `100%`,
-    };
-  } else {
-    incomeProgressBarClass = "under-income";
+  const totalSpent = (incomeMonth) => {
+    const expensesForMonth = expenses.filter(
+      (expense) => expense.budget.income.incomeMonth === incomeMonth
+    );
+    const totalExpenses = expensesForMonth.reduce(
+      (acc, expense) => acc + expense.amount,
+      0
+    );
 
-    incomeProgressBarStyle = {
-      width: `${percentage}%`,
-    };
-  }
+    // Calculate the percentage (make sure it doesn't exceed 100%)
+
+    return totalExpenses;
+  };
 
   return (
-    <div
-      className={incomeProgressBarClass}
-      style={incomeProgressBarStyle}
-    ></div>
+    <div>
+      {incomeMonths.map((incomeMonth) => (
+        <div key={incomeMonth}>
+          <h3>{incomeMonth}</h3>
+          <p>Total Spent: {totalSpent(incomeMonth)}</p>
+          <ProgressBar percentage={calculatePercentage(incomeMonth)} />
+        </div>
+      ))}
+    </div>
   );
 };
 
