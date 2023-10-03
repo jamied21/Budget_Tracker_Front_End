@@ -1,3 +1,12 @@
+
+.overflow-container {
+   height: 490px;
+   overflow-y: auto;
+  
+  }
+
+
+
 .button {
     background-color: seashell;
     border: none;
@@ -18,7 +27,7 @@
 .budget-container {
   display: grid;
    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /*Adjust px to match width of card body */
- 
+ overflow-y: auto;
 
   
 }

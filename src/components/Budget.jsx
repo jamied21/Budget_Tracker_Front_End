@@ -110,40 +110,41 @@ const Budget = () => {
       </button>
 
       {/* Budget Cards */}
-
-      <div className="budget-container">
-        {filteredBudgets.map((budget) => (
-          <div className="flip-card" key={budget.id}>
-            <div className="flip-card-inner">
-              <div className="flip-card-front">
-                <div className="budget-card-body">
-                  <ProgressBar
-                    percentage={calculateExpensePercentage(budget)}
-                  />
-                  <p>
-                    Total Spent: £{budgetsWithTotalExpenses[budget.id] || 0}
-                  </p>
-                  <h5 className="card-title">{budget.budgetName}</h5>
-                  <p className="card-text">£{budget.budgetAmount}</p>
+      <div className="overflow-container">
+        <div className="budget-container">
+          {filteredBudgets.map((budget) => (
+            <div className="flip-card" key={budget.id}>
+              <div className="flip-card-inner">
+                <div className="flip-card-front">
+                  <div className="budget-card-body">
+                    <ProgressBar
+                      percentage={calculateExpensePercentage(budget)}
+                    />
+                    <p>
+                      Total Spent: £{budgetsWithTotalExpenses[budget.id] || 0}
+                    </p>
+                    <h5 className="card-title">{budget.budgetName}</h5>
+                    <p className="card-text">£{budget.budgetAmount}</p>
+                  </div>
                 </div>
-              </div>
-              <div className="flip-card-back">
-                <div className="budget-card-body-back">
-                  {/* Displays list of each expense for the relevant budget for reverse side of the card
-                   */}
-                  {data.expenses
-                    .filter((expense) => expense.budget.id === budget.id)
-                    .map((expense) => (
-                      <div key={expense.id}>
-                        <p>Expense: {expense.expenseName}</p>
-                        <p>Amount: £{expense.amount}</p>
-                      </div>
-                    ))}
+                <div className="flip-card-back">
+                  <div className="budget-card-body-back">
+                    {/* Displays list of each expense for the relevant budget for reverse side of the card
+                     */}
+                    {data.expenses
+                      .filter((expense) => expense.budget.id === budget.id)
+                      .map((expense) => (
+                        <div key={expense.id}>
+                          <p>Expense: {expense.expenseName}</p>
+                          <p>Amount: £{expense.amount}</p>
+                        </div>
+                      ))}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -12,10 +12,19 @@ const HomePage = () => {
       <h1>Welcome back... </h1>
 
       <div className="home-container">
-        <IncomeProgressBar />
-        <Budget />
-
-        <Expense />
+        <div className="left-side">
+          <div className="income-bar">
+            <IncomeProgressBar />
+          </div>
+          <div>
+            <Budget />
+          </div>
+        </div>
+        <div className="right-side">
+          <div class="parent-container">
+            <Expense />
+          </div>
+        </div>
       </div>
     </div>
   );

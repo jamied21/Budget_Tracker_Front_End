@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import BudgetValidation from "./BudgetValidation";
 
 const AddBudget = () => {
   const [name, setName] = useState("");
