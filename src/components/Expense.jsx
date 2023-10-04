@@ -47,6 +47,7 @@ const Expense = () => {
 
   return (
     <div>
+      <h1>Expenses</h1>
       <select
         id="monthDropdown"
         onChange={handleMonthChange}
@@ -58,23 +59,29 @@ const Expense = () => {
           </option>
         ))}
       </select>
-      <div className="expense-container">
-        <button className="button" onClick={AddExpenseLink} type="button">
-          Add Expense
-        </button>
-        {filteredExpenses.map((expense) => {
-          return (
-            <div className="expense-card-body" key={expense.id}>
-              <h5 className="expense-card-title">
-                Budget Category: {expense.budget.budgetName}
-              </h5>
-              <h5 className="expense-card-title">
-                Expense: {expense.expenseName}
-              </h5>
-              <p className="expense-card-text">£{expense.amount}</p>
-            </div>
-          );
-        })}
+      <div className="parent-container">
+        <div className="expense-container">
+          <button
+            className="expense-button"
+            onClick={AddExpenseLink}
+            type="button"
+          >
+            Add Expense
+          </button>
+          {filteredExpenses.map((expense) => {
+            return (
+              <div className="expense-card-body" key={expense.id}>
+                <h5 className="expense-card-title">
+                  Budget Category: {expense.budget.budgetName}
+                </h5>
+                <h5 className="expense-card-title">
+                  Expense: {expense.expenseName}
+                </h5>
+                <p className="expense-card-text">£{expense.amount}</p>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

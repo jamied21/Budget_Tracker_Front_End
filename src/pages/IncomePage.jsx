@@ -1,5 +1,5 @@
 import Income from "../components/Income";
-
+import "../styles/IncomeCard.css";
 const IncomePage = () => {
   return (
     <div>
