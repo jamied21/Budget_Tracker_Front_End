@@ -29,6 +29,7 @@ const Income = () => {
       <button class="button" onClick={AddIncomeLink} type="button">
         Add Income
       </button>
+
       {incomes.map((income) => (
         <div class="card-body" key={income.id}>
           <h5 class="card-title">{income.incomeMonth}</h5>
